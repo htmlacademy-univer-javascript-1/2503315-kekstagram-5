@@ -1,4 +1,6 @@
-const isLengthSuitable = (string, maxLength) => string.length <= maxLength;
+const isLengthSuitable = function(string, maxLength) {
+  return string.length <= maxLength;
+};
 
 const isStringPalindrome = (string) => {
   const normalizedString = string.replaceAll(' ', '').toLowerCase();
