@@ -21,3 +21,22 @@ const getNumber = (value) => {
   }
   return Number(result);
 };
+
+
+function isMeetingDuringWorktime (startWork, endWork, startMeeting, duration) {
+  function convertToMinutes (time) {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
+  }
+
+  const startWorkMinutes = convertToMinutes(startWork);
+  const endWorkMinutes = convertToMinutes(endWork);
+  const startMeetingMinutes = convertToMinutes(startMeeting);
+  const endMeetingMinutes = startMeetingMinutes + duration;
+
+  return startMeetingMinutes >= startWorkMinutes & endMeetingMinutes <= endWorkMinutes;
+}
+
+console.log(isMeetingDuringWorktime('08:00', '17:30', '14:00', 90));
+console.log(isMeetingDuringWorktime('8:0', '10:0', '8:00', 120));
+console.log(isMeetingDuringWorktime('08:00', '17:30', '14:00', 300));
