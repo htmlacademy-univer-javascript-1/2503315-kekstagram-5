@@ -1,4 +1,5 @@
-import {drawPictures} from './images.js';
+import { generatePhotos } from './data.js';
+import { renderGallery } from './gallery.js';
 
 
-drawPictures();
+renderGallery(generatePhotos());
