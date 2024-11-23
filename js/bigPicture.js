@@ -7,7 +7,6 @@ const commentTemplate = document.querySelector('#comment').content.querySelector
 
 const COMMENT_STEP = 5;
 let commentShown = 0;
-let currentComments = {};
 let allComments = document.createDocumentFragment();
 
 const createComment = ({ avatar, name, message }) => {
@@ -21,26 +20,13 @@ const createComment = ({ avatar, name, message }) => {
 };
 
 const renderComments = (comments) => {
-  commentsList.innerHTML = '';
   const fragment = document.createDocumentFragment();
   comments.forEach((item) => {
     const comment = createComment(item);
     fragment.append(comment);
   });
   allComments = fragment;
-  const pictureCommentsCount = allComments.childNodes.length;
-  commentShown = (pictureCommentsCount <= COMMENT_STEP) ? pictureCommentsCount : COMMENT_STEP;
-  if (commentShown === pictureCommentsCount) {
-    commentsLoader.classList.add('hidden');
-  }
-  commentsCount.childNodes[0].textContent = `${commentShown} из `;
-  const showingComments = Array.from(allComments.cloneNode(true).childNodes).slice(0, commentShown);
-  const newFragment = document.createDocumentFragment();
-  showingComments.forEach((comment) => {
-    newFragment.append(comment);
-  });
-  currentComments = newFragment;
-  commentsList.append(currentComments);
+  showPartComments(false);
 };
 
 const hideBigPicture = () => {
@@ -49,13 +35,16 @@ const hideBigPicture = () => {
   document.removeEventListener('keydown', onDocumentKeyDown);
 };
 
-function showPartComments() {
+function showPartComments(flag) {
   commentsList.innerHTML = '';
-  const pictureComentsCount = allComments.childNodes.length;
-  if (currentComments.length !== 0) {
-    commentShown = (commentShown + COMMENT_STEP >= pictureComentsCount) ? pictureComentsCount : commentShown + COMMENT_STEP;
+  const pictureCommentsCount = allComments.childNodes.length;
+  if (flag) {
+    commentShown = (commentShown + COMMENT_STEP >= pictureCommentsCount) ? pictureCommentsCount : commentShown + COMMENT_STEP;
+  } else {
+    commentShown = (pictureCommentsCount <= COMMENT_STEP) ? pictureCommentsCount : COMMENT_STEP;
+    flag = true;
   }
-  if (commentShown === pictureComentsCount) {
+  if (commentShown === pictureCommentsCount) {
     commentsLoader.classList.add('hidden');
   }
   commentsCount.childNodes[0].textContent = `${commentShown} из `;
@@ -64,8 +53,7 @@ function showPartComments() {
   showingComments.forEach((comment) => {
     fragment.append(comment);
   });
-  currentComments = fragment;
-  commentsList.append(currentComments);
+  commentsList.append(fragment);
 }
 
 function onDocumentKeyDown(evt){
@@ -100,7 +88,7 @@ cancelButton.addEventListener('click', () => {
 });
 
 commentsLoader.addEventListener('click', () => {
-  showPartComments();
+  showPartComments(true);
 });
 
 export {showBigPicture};
