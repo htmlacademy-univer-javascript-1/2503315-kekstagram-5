@@ -12,7 +12,6 @@ let allComments = document.createDocumentFragment();
 const createComment = ({ avatar, name, message }) => {
   const comment = commentTemplate.cloneNode(true);
   const image = comment.querySelector('.social__picture');
-
   image.src = avatar;
   image.alt = name;
   comment.querySelector('.social__text').textContent = message;
