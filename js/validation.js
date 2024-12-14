@@ -1,5 +1,7 @@
 import { resetScale } from './changeScale.js';
-import {resetSlider} from './setFilter.js';
+import { resetSlider } from './setFilter.js';
+import { sendData } from './api.js';
+import { showErrorMessage, showSuccessMessage } from './message.js';
 
 
 const form = document.querySelector('#upload-select-image');
@@ -8,6 +10,12 @@ const imageUploadCancel = form.querySelector('#upload-cancel');
 const imageOverlay = form.querySelector('.img-upload__overlay');
 const hashtags = form.querySelector('.text__hashtags');
 const description = form.querySelector('.text__description');
+const imageUploadSubmit = form.querySelector('.img-upload__submit');
+
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Отправляю...'
+};
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -59,15 +67,38 @@ function validateHashtags(value) {
   return {valid: true};
 }
 
+const blockSubmitButton = () => {
+  imageUploadSubmit.disabled = true;
+  imageUploadSubmit.textContent = SubmitButtonText.SENDING;
+};
+
+const unlockSubmitButton = () => {
+  imageUploadSubmit.disabled = false;
+  imageUploadSubmit.textContent = SubmitButtonText.IDLE;
+};
+
+const setUserFormSubmit = (onSuccess) => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    if (pristine.validate()) {
+      blockSubmitButton();
+      const data = new FormData(evt.target);
+      sendData(data)
+        .then(() => {
+          showSuccessMessage();
+          onSuccess();
+        })
+        .catch(() => {
+          showErrorMessage();
+        })
+        .finally(unlockSubmitButton());
+    }
+  });
+};
+
 pristine.addValidator(hashtags,
   (value) => validateHashtags(value).valid,
   (value) => validateHashtags(value).message
 );
 
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
-  if (isValid) {
-    form.submit();
-  }
-});
+export { setUserFormSubmit, closeForm };
