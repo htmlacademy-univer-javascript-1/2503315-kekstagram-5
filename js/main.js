@@ -1,7 +1,12 @@
-import { generatePhotos } from './data.js';
 import { renderGallery } from './gallery.js';
-import './validation.js';
-import './changeScale.js';
-import './setFilter.js';
+import { getData } from './api.js';
+import { showAlert } from './util.js';
+import { closeForm, setUserFormSubmit } from './validation.js';
 
-renderGallery(generatePhotos());
+try {
+  const data = await getData();
+  renderGallery(data);
+} catch (err) {
+  showAlert(err.message);
+}
+setUserFormSubmit(closeForm);
