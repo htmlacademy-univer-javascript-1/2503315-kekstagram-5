@@ -1,7 +1,8 @@
-import {renderPictures} from './images.js';
+import { renderPictures } from './images.js';
 import { showBigPicture } from './bigPicture.js';
 
 const container = document.querySelector('.pictures');
+const filters = document.querySelector('.img-filters');
 
 export const renderGallery = (pictures) => {
   container.addEventListener('click', (evt) => {
@@ -18,4 +19,5 @@ export const renderGallery = (pictures) => {
   });
 
   renderPictures(pictures);
+  filters.classList.remove('img-filters--inactive');
 };
