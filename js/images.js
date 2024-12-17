@@ -2,7 +2,11 @@ const template = document.querySelector('#picture').content.querySelector('.pict
 const picturesList = document.querySelector('.pictures');
 const picturesFragment = document.createDocumentFragment();
 
-export const renderPictures = (pictures) => {
+const renderPictures = (pictures) => {
+  const images = picturesList.querySelectorAll('a');
+  for (let i = 0; i < images.length; i++) {
+    picturesList.removeChild(images[i]);
+  }
   pictures.forEach(({ url, description, likes, comments, id }) => {
     const picture = template.cloneNode(true);
     const image = picture.querySelector('.picture__img');
@@ -15,3 +19,5 @@ export const renderPictures = (pictures) => {
   });
   picturesList.append(picturesFragment);
 };
+
+export { renderPictures };
