@@ -1,6 +1,6 @@
 import { resetScale } from './changeScale.js';
 import { resetSlider } from './setFilter.js';
-import { sendData } from './api.js';
+import { postData } from './api.js';
 import { showErrorMessage, showSuccessMessage } from './message.js';
 
 
@@ -67,6 +67,13 @@ function validateHashtags(value) {
   return {valid: true};
 }
 
+function validateDescription(value) {
+  if (value.length > 140) {
+    return {valid: false, message: 'Максимальная длина описания: 140 символов.'};
+  }
+  return {valid: true};
+}
+
 const blockSubmitButton = () => {
   imageUploadSubmit.disabled = true;
   imageUploadSubmit.textContent = SubmitButtonText.SENDING;
@@ -83,7 +90,7 @@ const setUserFormSubmit = (onSuccess) => {
     if (pristine.validate()) {
       blockSubmitButton();
       const data = new FormData(evt.target);
-      sendData(data)
+      postData(data)
         .then(() => {
           showSuccessMessage();
           onSuccess();
@@ -99,6 +106,11 @@ const setUserFormSubmit = (onSuccess) => {
 pristine.addValidator(hashtags,
   (value) => validateHashtags(value).valid,
   (value) => validateHashtags(value).message
+);
+
+pristine.addValidator(description,
+  (value) => validateDescription(value).valid,
+  (value) => validateDescription(value).message
 );
 
 export { setUserFormSubmit, closeForm };
