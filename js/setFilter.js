@@ -99,11 +99,14 @@ noUiSlider.create(slider, {
 });
 
 slider.noUiSlider.on('update', () => {
-  const sliderValue = slider.noUiSlider.get();
+  let sliderValue = slider.noUiSlider.get();
   if (isDefault()) {
     image.style.filter = DEFAULT_VALUE.style;
   } else {
     image.style.filter = `${chosenEffect.style}(${sliderValue}${chosenEffect.unit})`;
+  }
+  if (!Number.isInteger(sliderValue)) {
+    sliderValue = Math.round(sliderValue * 10) / 10;
   }
   effectValue.value = sliderValue;
 });
