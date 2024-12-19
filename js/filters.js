@@ -11,7 +11,7 @@ const COUNT_RANDOM_PICTURES = 10;
 const availableFilters = {
   'filter-default': () => data.slice(),
   'filter-random': () => shuffleArray(data.slice(), COUNT_RANDOM_PICTURES),
-  'filter-discussed': () => data.slice().sort((first, second) => first.comments.length - second.comments.length)
+  'filter-discussed': () => data.slice().sort((first, second) => second.comments.length - first.comments.length)
 };
 
 const isButton = (evt) => evt.target.tagName === 'BUTTON';
