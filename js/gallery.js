@@ -1,4 +1,4 @@
-import { renderPictures } from './images.js';
+import { renderPictures, deletePictures } from './images.js';
 import { showBigPicture } from './bigPicture.js';
 
 const container = document.querySelector('.pictures');
@@ -17,7 +17,7 @@ export const renderGallery = (pictures) => {
     );
     showBigPicture(picture);
   });
-
+  deletePictures();
   renderPictures(pictures);
   filters.classList.remove('img-filters--inactive');
 };

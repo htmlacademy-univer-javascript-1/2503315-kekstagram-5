@@ -1,51 +1,38 @@
 import { renderGallery } from './gallery.js';
-import { getData } from './api.js';
+import { debounce, shuffleArray } from './util.js';
+import { data } from './main.js';
 
-const filterDefault = document.querySelector('#filter-default');
-const filterRandom = document.querySelector('#filter-random');
-const filterDiscussed = document.querySelector('#filter-discussed');
-const data = await getData();
-const RENDER_DELAY = 500;
+const imgFilters = document.querySelector('.img-filters');
+const imgFiltersForm = imgFilters.querySelector('.img-filters__form');
 
-function debounce (callback, timeoutDelay = 500) {
-  let timeoutId;
-  return (...rest) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
-  };
-}
+const ACTIVE_CLASS = 'img-filters__button--active';
+const COUNT_RANDOM_PICTURES = 10;
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const availableFilters = {
+  'filter-default': () => data.slice(),
+  'filter-random': () => shuffleArray(data.slice(), COUNT_RANDOM_PICTURES),
+  'filter-discussed': () => data.slice().sort((first, second) => first.comments.length - second.comments.length)
+};
 
-function chooseFilter(images, filter) {
-  renderGallery(images);
-  filterDefault.classList.remove('img-filters__button--active');
-  filterRandom.classList.remove('img-filters__button--active');
-  filterDiscussed.classList.remove('img-filters__button--active');
-  filter.classList.add('img-filters__button--active');
-}
+const isButton = (evt) => evt.target.tagName === 'BUTTON';
 
-filterDefault.addEventListener('click', debounce(() => {
-  chooseFilter(data, filterDefault);
-}, RENDER_DELAY));
-
-filterRandom.addEventListener('click', debounce(() => {
-  const allData = data.slice();
-  const randomData = [];
-  for (let i = 0; i < 10; i++) {
-    const randomImageIndex = getRandomInt(0, allData.length - 1);
-    randomData.push(allData[randomImageIndex]);
-    allData.splice(randomImageIndex, 1);
+const onImageFormClick = debounce((evt) => {
+  if (isButton(evt)) {
+    renderGallery(availableFilters[evt.target.id]());
   }
-  chooseFilter(randomData, filterRandom);
-}, RENDER_DELAY));
+});
 
-filterDiscussed.addEventListener('click', debounce(() => {
-  const allData = data.slice();
-  allData.sort((a, b) => b.comments.length - a.comments.length);
-  chooseFilter(allData, filterDiscussed);
-}, RENDER_DELAY));
+const onButtonClick = (evt) => {
+  if (isButton(evt)) {
+    const selectedButton = document.querySelector(`.${ACTIVE_CLASS}`);
+
+    if (selectedButton) {
+      selectedButton.classList.remove(ACTIVE_CLASS);
+    }
+    evt.target.classList.add(ACTIVE_CLASS);
+  }
+};
+
+imgFiltersForm.addEventListener('click', onImageFormClick);
+
+imgFiltersForm.addEventListener('click', onButtonClick);

@@ -1,4 +1,5 @@
 const ALERT_SHOW_TIME = 5000;
+const RENDER_DELAY = 500;
 
 const showAlert = (message) => {
   const alert = document.createElement('div');
@@ -19,4 +20,29 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export { showAlert };
+function debounce (callback, timeoutDelay = RENDER_DELAY) {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function shuffleArray(data, count) {
+  const allData = data.slice();
+  const randomData = [];
+  for (let i = 0; i < count; i++) {
+    const randomImageIndex = getRandomInt(0, allData.length - 1);
+    randomData.push(allData[randomImageIndex]);
+    allData.splice(randomImageIndex, 1);
+  }
+  return randomData;
+}
+
+export { showAlert, debounce, shuffleArray };
