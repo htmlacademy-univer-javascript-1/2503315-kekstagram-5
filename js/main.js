@@ -3,10 +3,13 @@ import { getData } from './api.js';
 import { showAlert } from './util.js';
 import { closeForm, setUserFormSubmit } from './validation.js';
 
+const data = await getData();
+
 try {
-  const data = await getData();
   renderGallery(data);
 } catch (err) {
   showAlert(err.message);
 }
 setUserFormSubmit(closeForm);
+
+export { data };

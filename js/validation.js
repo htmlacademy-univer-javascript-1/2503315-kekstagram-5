@@ -10,7 +10,7 @@ const imageUploadCancel = form.querySelector('#upload-cancel');
 const imageOverlay = form.querySelector('.img-upload__overlay');
 const hashtags = form.querySelector('.text__hashtags');
 const description = form.querySelector('.text__description');
-const imageUploadSubmit = form.querySelector('.img-upload__submit');
+const imageUploadSubmit = form.querySelector('#upload-submit');
 
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
@@ -94,11 +94,12 @@ const setUserFormSubmit = (onSuccess) => {
         .then(() => {
           showSuccessMessage();
           onSuccess();
+          unlockSubmitButton();
         })
         .catch(() => {
           showErrorMessage();
-        })
-        .finally(unlockSubmitButton());
+          unlockSubmitButton();
+        });
     }
   });
 };
