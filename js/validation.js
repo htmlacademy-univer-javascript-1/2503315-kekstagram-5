@@ -1,5 +1,5 @@
-import { resetScale } from './changeScale.js';
-import { resetSlider } from './setFilter.js';
+import { resetScale } from './change-scale.js';
+import { resetSlider } from './set-filter.js';
 import { postData } from './api.js';
 import { showErrorMessage, showSuccessMessage } from './message.js';
 
@@ -52,7 +52,11 @@ function onDocumentKeyDown(evt) {
   }
 }
 
-imageUploadCancel.addEventListener('click', closeForm);
+function onCloseForm() {
+  closeForm();
+}
+
+imageUploadCancel.addEventListener('click', onCloseForm);
 
 function validateHashtags(value) {
   const tags = value.split(' ').map((tag) => tag.toLowerCase()).filter((item) => item && item.trim() !== '');

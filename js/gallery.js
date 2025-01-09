@@ -1,5 +1,5 @@
 import { renderPictures, deletePictures } from './images.js';
-import { showBigPicture } from './bigPicture.js';
+import { showBigPicture } from './big-picture.js';
 
 const container = document.querySelector('.pictures');
 const filters = document.querySelector('.img-filters');
